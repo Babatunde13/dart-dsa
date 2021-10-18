@@ -2,62 +2,75 @@ import 'dart:io';
 import 'dart:math';
 
 void main(List<String> args) {
-  for (String arg in args) {
-    print(arg);
-    runApp(arg.toLowerCase());
-    print('');
-  }
-  print('');
+  // for (String arg in args) {
+  //   print(arg);
+  //   playRockPaperScissorsGameWithComputer(arg.toLowerCase());
+  //   print('');
+  // }
+  // print('');
   runAppWithInput();
 }
 
-enum Output { tie, lose, win }
+enum rockPaperScissorsGameOutput { tie, lose, win }
 
-Output runApp(String arg) {
-  arg = arg.toLowerCase();
-  const option = ['rock', 'paper', 'scissors'];
-  String random = option[Random().nextInt(option.length)];
-  if (arg[0] == random[0]) {
+rockPaperScissorsGameOutput playRockPaperScissorsGame(
+    String player1, String player2) {
+  if (player1[0] == player2[0]) {
     print('Tie');
-    return Output.tie;
-  } else if (arg.startsWith('r') && random == 'scissors') {
+    return rockPaperScissorsGameOutput.tie;
+  } else if (
+      player1.startsWith('r') && player2 == 'scissors' ||
+      player1.startsWith('p') && player2 == 'rock' ||
+      player1.startsWith('s') && player2 == 'paper'
+    ) {
     print('You win');
-    return Output.win;
-  } else if (arg.startsWith('r') && random == 'paper') {
+    return rockPaperScissorsGameOutput.win;
+  } else if (
+      player1.startsWith('r') && player2 == 'paper' ||
+      player1.startsWith('p') && player2 == 'scissors' ||
+      player1.startsWith('s') && player2 == 'rock'
+    ) {
     print('You lose');
-    return Output.lose;
-  } else if (arg.startsWith('p') && random == 'rock') {
-    print('You win');
-    return Output.win;
-  } else if (arg.startsWith('p') && random == 'scissors') {
-    print('You lose');
-    return Output.lose;
-  } else if (arg.startsWith('s') && random == 'paper') {
-    print('You win');
-    return Output.win;
-  } else if (arg.startsWith('s') && random == 'rock') {
-    print('You lose');
-    return Output.win;
+    return rockPaperScissorsGameOutput.lose;
   } else {
     print('Invalid input');
-    return Output.lose;
+    return rockPaperScissorsGameOutput.lose;
   }
 }
 
 void runAppWithInput() {
   var score = 0;
   while (true) {
-    stdout.write('Enter your choice, should start with r, p or c: > ');
+    stdout
+        .write('Enter your choice :q to quit, should start with r, p or c: > ');
     var input = stdin.readLineSync();
-    var win = runApp(input as String);
-    print(win);
-    if (win == Output.lose) {
+    input = input?.toLowerCase();
+    if (input == '') {
+      print('You did not type anything');
       break;
-    } else if (win == Output.tie) {
+    }
+    if (input == ':q') {
+      break;
+    }
+    // if (input?.startsWithr') && !input?.startsWith('p') && !input?.startsWith('c')) {
+    //   print('Invalid input');
+    //   break;
+    // }
+    var win = playRockPaperScissorsGameWithComputer(input as String);
+    if (win == rockPaperScissorsGameOutput.lose) {
+      break;
+    } else if (win == rockPaperScissorsGameOutput.tie) {
       continue;
     } else {
       score++;
     }
   }
   print('You scored $score');
+}
+
+rockPaperScissorsGameOutput playRockPaperScissorsGameWithComputer(
+    String player) {
+  const option = ['rock', 'paper', 'scissors'];
+  String random = option[Random().nextInt(option.length)];
+  return playRockPaperScissorsGame(player, random);
 }
